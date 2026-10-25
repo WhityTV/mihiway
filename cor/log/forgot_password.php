@@ -300,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_password'])) {
         }
 
         if (empty($errors)) {
-            $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
+            $passwordHash = $forgotPassword->hashPassword($password);
             $safeHash = $forgotPassword->esc($passwordHash);
             $updateResult = $forgotPassword->qry("UPDATE al_usr SET password = '{$safeHash}' WHERE id = {$resetUserId};");
             if ($updateResult === false) {
@@ -314,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_password'])) {
                 $verifyResult = $forgotPassword->qry("SELECT password FROM al_usr WHERE id = {$resetUserId} LIMIT 1;");
                 $verifyRow = ($verifyResult && $verifyResult->num_rows > 0) ? mysqli_fetch_assoc($verifyResult) : null;
                 $storedHash = $verifyRow['password'] ?? '';
-                if ($storedHash === '' || !password_verify($password, $storedHash)) {
+                if ($storedHash === '' || !$forgotPassword->verifyPassword($password, $storedHash)) {
                     $errors[] = $forgotPassword->getLan('login_failed');
                     $_SESSION['reset_step'] = 'password';
                     $step = 'password';

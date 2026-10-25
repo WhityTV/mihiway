@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['firstname'], $_POST['
     }
 
     if (empty($errors)) {
-        $password = password_hash($passwordInput, PASSWORD_ARGON2ID);
+        $password = $register->hashPassword($passwordInput);
         $register->qry("INSERT INTO al_usr (firstname, lastname, username, mail, password) VALUES ('{$firstname}', '{$lastname}', '{$username}', '{$email}', '{$password}');");
         header("Location: ../log/login.php");
         exit;

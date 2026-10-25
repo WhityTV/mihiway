@@ -135,6 +135,14 @@ class Functions {
         return false;
     }
 
+    public function hashPassword(string $password): string {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function verifyPassword(string $password, string $hash): bool {
+        return password_verify($password, $hash);
+    }
+
     public function hasWeakRepetitionPattern(string $password): bool {
         $trimmed = trim($password);
         if ($trimmed === '') {
@@ -165,4 +173,20 @@ class Functions {
 
         return false;
     }
+
 }
+
+function br() {
+    echo '<br>';
+}
+
+function nbsp(int $x = 1) {
+    for ($i = 0; $i < $x; $i++) {
+        echo '&nbsp;';
+    }
+}
+
+function b(string $text) {
+    echo '<b>' . $text . '</b>';
+}
+
